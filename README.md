@@ -12,11 +12,11 @@ ModelValidator is ...
 
 # LICENSE
 
-Copyright (C) y\_uuki
+Copyright (C) Yuuki Tsubouchi
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 # AUTHOR
 
-y\_uuki <yuki.tsubo@gmail.com>
+Yuuki Tsubouchi <yuuki@cpan.org>
