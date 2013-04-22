@@ -4,6 +4,22 @@ use warnings;
 use 5.008005;
 our $VERSION = "0.01";
 
+use Carp ();
+
+use ModelValidator::Validations;
+
+sub new {
+    my $class = shift;
+    my $rule  = shift or Carp::croak 'required rule';
+
+    if (ref($rule) ne 'HASH') {
+        Carp::croak "rule must be HASH";
+    }
+
+    return bless {
+        rule => $rule, errors => [],
+    }, $class;
+}
 
 
 1;
