@@ -8,6 +8,7 @@ use Carp ();
 
 use ModelValidator::Validations;
 use ModelValidator::Types::Length;
+use ModelValidator::Types::Presence;
 
 my $BULTINS = [qw(
     presence
