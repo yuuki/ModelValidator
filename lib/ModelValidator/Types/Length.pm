@@ -2,15 +2,15 @@ package ModelValidator::Types::Length;
 use strict;
 use warnings;
 
-use Carp ();
+use Carp qw(croak);
 
 # $cond  #= { is => 4, message => 'is not 4' }
 # $value #= 4
 sub is_valid {
     my $class = shift;
-    my $cond  = shift or Carp::croak 'required cond';
-    my $value = shift or Carp::croak 'required value';
-    ref($cond) eq 'HASH' or Carp::croak 'cond must be HASH';
+    my $cond  = shift or croak 'required cond';
+    my $value = shift or croak 'required value';
+    ref($cond) eq 'HASH' or croak 'cond must be HASH';
 
     for my $option (keys %$cond) {
         my $exp = $cond->{$option};

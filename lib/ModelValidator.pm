@@ -99,19 +99,19 @@ ModelValidator - Model Validation utility like ActiveModel validator and Data::V
             presence => 1,
             length => { minimum => 6, maximum => 20 },
             format => { with => /^[0-9A-Za-z_@%]{4,}$/ },
-            confirmation => true,
         },
         description => {
             presence => { message => 'need to be input' },
             length => { minimum => 1, maximum => 200 },
         },
         uri => {
-            callback => sub {
-                my $self = shift;
-                $self->{message} = "uniqueness";
-                return not YourModel::User->find_by_uri($_);
+            callback => {
+                if => sub {
+                    my $self = shift;
+                    return not YourModel::User->find_by_uri($_);
+                },
+                message => sub { $_ is not unique },
             },
-            default => "",
         },
     };
 
