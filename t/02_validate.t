@@ -55,7 +55,7 @@ subtest validate => sub {
                 name => {
                     length => {
                         is => '20',
-                        message => sub { "$_[0] length is not 20" }
+                        message => sub { "$_ length is not 20" }
                     }
                 },
             });

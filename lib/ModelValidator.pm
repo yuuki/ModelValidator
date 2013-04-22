@@ -73,7 +73,8 @@ sub set_error {
     my $msg   = shift or Carp::croak 'required msg';
 
     if (ref($msg) eq 'CODE') {
-        $msg = $msg->($value);
+        local $_ = $value;
+        $msg = $msg->();
     }
     $self->{errors}->{$attr} = $msg;
 }
