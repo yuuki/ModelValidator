@@ -9,19 +9,19 @@ use Carp ();
 sub is_valid {
     my $class = shift;
     my $cond  = shift or Carp::croak 'required cond';
-    my $value = shift or Carp::croak 'requried value';
+    my $value = shift or Carp::croak 'required value';
     ref($cond) eq 'HASH' or Carp::croak 'cond must be HASH';
 
     for my $option (keys %$cond) {
         my $exp = $cond->{$option};
         if ($option eq 'is') {
-            return 0 if $value ne $exp;
+            return 0 if length($value) ne $exp;
         }
         elsif ($option eq 'minimum') {
-            return 0 if $value < $exp;
+            return 0 if length($value) < $exp;
         }
         elsif ($option eq 'maximum') {
-            return 0 if $value > $exp;
+            return 0 if length($value) > $exp;
         }
         else {
             Carp::croak "No such option for length: $option";
