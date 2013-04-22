@@ -36,13 +36,35 @@ subtest validate => sub {
         my $guard_l = mock_guard('ModelValidator::Types::Length', {
             is_valid => 0
         });
-        my $v = ModelValidator->new({
-            name => {
-                length => { is => '20', message => 'is not 20' }
-            },
-        });
-        $v->validate({ name => 'yuuki' });
-        is_deeply $v->errors, ['is not 20'];
+
+        subtest 'string message' => sub {
+            my $v = ModelValidator->new({
+                name => {
+                    length => { is => '20', message => 'not 20' }
+                },
+            });
+            $v->validate({ name => 'yuuki' });
+
+            isa_ok $v->errors, 'HASH';
+            ok exists $v->errors->{name};
+            is_deeply $v->errors->{name}, 'not 20';
+        };
+
+        subtest 'subref message' => sub {
+            my $v = ModelValidator->new({
+                name => {
+                    length => {
+                        is => '20',
+                        message => sub { "$_[0] length is not 20" }
+                    }
+                },
+            });
+            $v->validate({ name => 'yuuki' });
+
+            isa_ok $v->errors, 'HASH';
+            ok exists $v->errors->{name};
+            is_deeply $v->errors->{name}, 'yuuki length is not 20';
+        };
     };
 };
 

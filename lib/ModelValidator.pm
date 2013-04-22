@@ -28,12 +28,13 @@ sub new {
     }
 
     return bless {
-        rule => $rule, errors => [],
+        rule => $rule, errors => {},
     }, $class;
 }
 
 sub validate {
     my ($self, $attrs) = @_;
+
     if (!defined $attrs || ref($attrs) ne 'HASH') {
         Carp::croak "attrs must be HASH";
     }
@@ -51,7 +52,7 @@ sub validate {
                 my $class = 'ModelValidator::Types::' . ucfirst($type);
                 my $msg = delete $cond->{message} if ref($cond) eq 'HASH';
                 unless ($class->is_valid($cond, $value)) {
-                    $self->set_error($msg) if defined $msg;
+                    $self->set_error($attr, $value, $msg) if defined $msg;
                 }
             }
             else { #TODO custom type
@@ -67,9 +68,14 @@ sub errors {
 
 sub set_error {
     my $self = shift;
-    my $error_message = shift
-        or Carp::croak 'requried error_message';
-    push @{$self->{errors}}, $error_message;
+    my $attr  = shift or Carp::croak 'required attr';
+    my $value = shift or Carp::croak 'required value';
+    my $msg   = shift or Carp::croak 'required msg';
+
+    if (ref($msg) eq 'CODE') {
+        $msg = $msg->($value);
+    }
+    $self->{errors}->{$attr} = $msg;
 }
 
 1;
@@ -95,7 +101,7 @@ ModelValidator - Model Validation utility like ActiveModel validator and Data::V
         },
         description => {
             presence => { message => 'need to be input' },
-            length => { in => 5..100, :allow_blank => true },
+            length => { minimum => 1, maximum => 200 },
         },
         uri => {
             callback => sub {
