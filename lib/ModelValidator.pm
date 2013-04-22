@@ -7,6 +7,17 @@ our $VERSION = "0.01";
 use Carp ();
 
 use ModelValidator::Validations;
+use ModelValidator::Types::Length;
+
+my $BULTINS = [qw(
+    presence
+    length
+    format
+    numericality
+    callback
+)];
+
+my $IS_BULTINS_RE = qr(@{[join '|', @$BULTINS]});
 
 sub new {
     my $class = shift;
@@ -21,6 +32,45 @@ sub new {
     }, $class;
 }
 
+sub validate {
+    my ($self, $attrs) = @_;
+    if (!defined $attrs || ref($attrs) ne 'HASH') {
+        Carp::croak "attrs must be HASH";
+    }
+
+    my $rule = $self->{rule};
+    for my $attr (keys %$attrs) {
+        next if not exists $rule->{$attr};
+
+        my $validation = $rule->{$attr};
+        for my $type (keys %$validation) {
+            my $cond  = $validation->{$type};
+            my $value = $attrs->{$attr};
+
+            if ($type =~ $IS_BULTINS_RE) {
+                my $class = 'ModelValidator::Types::' . ucfirst($type);
+                my $msg = delete $cond->{message} if ref($cond) eq 'HASH';
+                unless ($class->is_valid($cond, $value)) {
+                    $self->set_error($msg) if defined $msg;
+                }
+            }
+            else { #TODO custom type
+            }
+        }
+    }
+    return $attrs;
+}
+
+sub errors {
+    $_[0]->{errors};
+}
+
+sub set_error {
+    my $self = shift;
+    my $error_message = shift
+        or Carp::croak 'requried error_message';
+    push @{$self->{errors}}, $error_message;
+}
 
 1;
 __END__

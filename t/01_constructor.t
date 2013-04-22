@@ -13,8 +13,7 @@ subtest constructor => sub {
         my $params = {
             name => {
                 presence => 1,
-                maximum => 20,
-                minimum => 4,
+                length => { maximum => 20, minimum => 4 },
             },
             description => {
                 presence => { message => 'need to be input' },
