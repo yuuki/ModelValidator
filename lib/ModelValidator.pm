@@ -5,6 +5,7 @@ use 5.008005;
 our $VERSION = "0.01";
 
 use Carp ();
+use Module::Load qw(load);
 
 use ModelValidator::Types::Callback;
 use ModelValidator::Types::Format;
@@ -51,14 +52,13 @@ sub validate {
             my $cond  = $validation->{$type};
             my $value = $attrs->{$attr};
 
-            if ($type =~ $IS_BULTINS_RE) {
-                my $class = 'ModelValidator::Types::' . ucfirst($type);
-                my $msg = delete $cond->{message} if ref($cond) eq 'HASH';
-                unless ($class->is_valid($cond, $value)) {
-                    $self->set_error($attr, $value, $msg) if defined $msg;
-                }
+            my $class = 'ModelValidator::Types::' . ucfirst($type);
+            if ($type !~ $IS_BULTINS_RE) {
+                load $class; # user definition Types load
             }
-            else { #TODO custom type
+            my $msg = delete $cond->{message} if ref($cond) eq 'HASH';
+            unless ($class->is_valid($cond, $value)) {
+                $self->set_error($attr, $value, $msg) if defined $msg;
             }
         }
     }

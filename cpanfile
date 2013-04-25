@@ -5,6 +5,7 @@ on test => sub {
 };
 
 on configure => sub {
+    requires 'Module::Load'; # 5.10+ standard, bundled module
 };
 
 on 'develop' => sub {

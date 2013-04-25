@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use lib 'lib';
+use lib 'lib' => 't/lib';
 
 use Test::More;
 use Test::Fatal;

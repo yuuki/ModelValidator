@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use lib 'lib';
+use lib 'lib' => 't/lib';
 
 use Test::More;
 use Test::Fatal;
@@ -70,19 +70,24 @@ subtest validate => sub {
     for my $type (qw(callback format length numericality presence)) {
         subtest "builtin type '$type' is callable" => sub {
             my $v = ModelValidator->new({
-                name => {
-                    $type => {
-                        is => '20',
-                        message => sub { "$_ length is not 20" }
-                    }
-                },
+                name => { $type => { is => '20' } },
             });
             unlike exception {
                 $v->validate({ name => 'yuuki' });
             }, qr(^Can't locate object method);
         };
     }
+
+    subtest "user definition type is callable" => sub {
+        my $v = ModelValidator->new({
+            name => { fake => { is => '20' } }
+        });
+        unlike exception {
+            $v->validate({ name => 'yuuki' });
+        }, qr(^Can't locate ModelValidator/Types/Fake);
+    };
+
 };
 
-
 done_testing;
+
