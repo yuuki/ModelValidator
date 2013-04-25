@@ -6,9 +6,11 @@ our $VERSION = "0.01";
 
 use Carp ();
 
-use ModelValidator::Types::Length;
-use ModelValidator::Types::Presence;
 use ModelValidator::Types::Callback;
+use ModelValidator::Types::Format;
+use ModelValidator::Types::Length;
+use ModelValidator::Types::Numericality;
+use ModelValidator::Types::Presence;
 
 my $BULTINS = [qw(
     presence

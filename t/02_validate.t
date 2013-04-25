@@ -66,6 +66,22 @@ subtest validate => sub {
             is_deeply $v->errors->{name}, 'yuuki length is not 20';
         };
     };
+
+    for my $type (qw(callback format length numericality presence)) {
+        subtest "builtin type '$type' is callable" => sub {
+            my $v = ModelValidator->new({
+                name => {
+                    $type => {
+                        is => '20',
+                        message => sub { "$_ length is not 20" }
+                    }
+                },
+            });
+            unlike exception {
+                $v->validate({ name => 'yuuki' });
+            }, qr(^Can't locate object method);
+        };
+    }
 };
 
 
