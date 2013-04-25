@@ -4,7 +4,6 @@ use lib 'lib';
 
 use Test::More;
 use Test::Fatal;
-use Test::Mock::Guard qw(mock_guard);
 
 use ModelValidator::Types::Numericality;
 
