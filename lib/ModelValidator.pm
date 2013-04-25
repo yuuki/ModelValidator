@@ -9,6 +9,7 @@ use Carp ();
 use ModelValidator::Validations;
 use ModelValidator::Types::Length;
 use ModelValidator::Types::Presence;
+use ModelValidator::Types::Callback;
 
 my $BULTINS = [qw(
     presence
@@ -68,7 +69,7 @@ sub errors {
 }
 
 sub set_error {
-    my $self = shift;
+    my $self  = shift;
     my $attr  = shift or Carp::croak 'required attr';
     my $value = shift or Carp::croak 'required value';
     my $msg   = shift or Carp::croak 'required msg';
@@ -93,7 +94,11 @@ ModelValidator - Model Validation utility like ActiveModel validator and Data::V
 
     use ModelValidator;
 
-    my $params = [qw(passwd description uri)];
+    my $params = {
+        passwd => 'abcdef',
+        description => 'Internet Watcher',
+        uri => 'https://metacpan.org/author/yuuki',
+    }];
     my $rule = {
         passwd => {
             presence => 1,
@@ -118,11 +123,12 @@ ModelValidator - Model Validation utility like ActiveModel validator and Data::V
     my $v = ModelValidator->new($rule);
     unless ($v->validate($params)) {
         my $errors = $v->errors;
+        $errors->{callback}; #= 'https://metacpan.org/author/yuuki is not unique'
     }
 
 =head1 DESCRIPTION
 
-ModelValidator is ...
+ModelValidator is Model Validation utility like ActiveModel validator and Data::Validator
 
 =head1 LICENSE
 
