@@ -6,7 +6,6 @@ our $VERSION = "0.01";
 
 use Carp ();
 
-use ModelValidator::Validations;
 use ModelValidator::Types::Length;
 use ModelValidator::Types::Presence;
 use ModelValidator::Types::Callback;
@@ -61,6 +60,7 @@ sub validate {
             }
         }
     }
+
     return $attrs;
 }
 
