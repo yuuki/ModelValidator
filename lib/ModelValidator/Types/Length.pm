@@ -15,13 +15,13 @@ sub is_valid {
     for my $option (keys %$cond) {
         my $exp = $cond->{$option};
         if ($option eq 'is') {
-            return 0 if length($value) ne $exp;
+            return 0 unless length($value) eq $exp;
         }
         elsif ($option eq 'minimum') {
-            return 0 if length($value) < $exp;
+            return 0 unless length($value) >= $exp;
         }
         elsif ($option eq 'maximum') {
-            return 0 if length($value) > $exp;
+            return 0 unless length($value) <= $exp;
         }
         else {
             Carp::croak "No such option for length: $option";
